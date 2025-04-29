@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Amarante&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -79,3 +80,6 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+

@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         amarante: ['Amarante', 'sans-serif'],
+        beVietnamPro: ['Be Vietnam Pro', 'sans-serif'],
       },
     },
   },
