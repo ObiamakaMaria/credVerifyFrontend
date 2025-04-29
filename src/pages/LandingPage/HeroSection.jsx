@@ -10,8 +10,8 @@ const HeroSection = () => {
         {/* Top content container */}
         <div className="flex flex-col items-center justify-center flex-grow">
           {/* Label Element */}
-          <div className="relative inline-flex items-center gap-2 rounded-[20px] p-[1px] mb-4 bg-button-gradient">
-            <div className="flex items-center gap-2 bg-[#121212] rounded-[20px] px-3 py-1 w-full h-full">
+          <div className="relative inline-flex items-center gap-2 rounded-lg p-[1px] mb-4 bg-button-gradient">
+            <div className="flex items-center gap-2 bg-[#121212] rounded-lg px-3 py-1 w-full h-full">
               <FcSearch className="w-4 h-4 text-white opacity-80" />
               <span className="font-be-vietnam-pro font-thin text-xs leading-[170%] text-white text-opacity-80">
                 Transparent, onchain scoring logic
