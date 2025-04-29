@@ -1,161 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import { createAppKit } from "@reown/appkit/react";
-import { EthersAdapter } from "@reown/appkit-adapter-ethers";
-import { arbitrum, mainnet } from "@reown/appkit/networks";
+// src/App.jsx
+import React, { useState, useEffect } from 'react';
+import Sidebar from './components/layout/Sidebar';
+import Header from './components/layout/Header';
+import CreditScoreCard from './components/cards/CreditScoreCard';
+import AvailableLoansCard from './components/cards/AvailableLoansCard';
+import QuarterGoalCard from './components/cards/QuarterGoalCard';
+import HighlightCard from './components/cards/HighlightCard';
+import CreditScoreTrendChart from './components/charts/CreditScoreTrendChart';
+import PaymentHistoryChart from './components/charts/PaymentHistoryChart';
+import ActiveLoans from './components/loans/ActiveLoans';
+import FinancialOpportunities from './components/loans/FinancialOpportunities';
+import { creditScoreTrendData, paymentHistoryData, financialOpportunities } from './data/mockData';
 
-const projectId = process.env.VITE_REOWN_PROJECT_ID;
-
-const metadata = {
-  name: "My dApp",
-  description: "My Web3 application",
-  url: window.location.origin,
-  icons: ["https://mydapp.com/icon.png"],
-};
-
-const appKit = createAppKit({
-  adapters: [new EthersAdapter()],
-  networks: [arbitrum, mainnet],
-  metadata,
-  projectId,
-  features: {
-    analytics: true,
-  },
-});
-
-function ConnectButton() {
-  const [connected, setConnected] = useState(false);
-  const [address, setAddress] = useState("");
+const App = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        if (appKit.isConnected?.()) {
-          const accounts = await appKit.getAccounts?.();
-          if (accounts && accounts.length > 0) {
-            setConnected(true);
-            setAddress(accounts[0]);
-          }
-        }
-      } catch (error) {
-        console.error("Connection check error:", error);
-      }
-    };
-
-    checkConnection();
-
-    const handleAccountsChanged = (accounts) => {
-      if (accounts && accounts.length > 0) {
-        setConnected(true);
-        setAddress(accounts[0]);
-      } else {
-        setConnected(false);
-        setAddress("");
-      }
-    };
-
-    appKit.on?.('accountsChanged', handleAccountsChanged);
-
-    return () => {
-      appKit.off?.('accountsChanged', handleAccountsChanged);
-    };
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, []);
 
-  const openConnectModal = () => {
-    try {
-      console.log("Opening modal...");
-      if (appKit.open) {
-        appKit.open();
-      } else if (appKit.connect) {
-        appKit.connect();
-      }
-    } catch (error) {
-      console.error("Error opening modal:", error);
-    }
-  };
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
 
-  const openNetworkModal = () => {
-    try {
-      console.log("Opening network modal...");
-      if (appKit.open) {
-        appKit.open({ view: "Networks" });
-      }
-    } catch (error) {
-      console.error("Error opening network modal:", error);
-    }
-  };
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900">
+        <div className="text-red-500">{error}</div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      {!connected ? (
-        <div>
-          <button 
-            onClick={openConnectModal} 
-            style={{
-              backgroundColor: "#3498db",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontWeight: "bold",
-              marginRight: "10px"
-            }}
-          >
-            Connect Wallet
-          </button>
-          
-          <button 
-            onClick={openNetworkModal} 
-            style={{
-              backgroundColor: "#2ecc71",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontWeight: "bold"
-            }}
-          >
-            Select Network
-          </button>
+    <div className="bg-gray-900 min-h-screen text-white">
+      <Sidebar />
+      <div className="ml-16 p-6">
+        <Header username="Fred" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <CreditScoreCard score={760} change={3} period="3 months" />
+          <AvailableLoansCard amount={12000} />
+          <QuarterGoalCard percentage={84} />
         </div>
-      ) : (
-        <div style={{ 
-          padding: "15px", 
-          backgroundColor: "#f8f9fa",
-          borderRadius: "8px",
-          boxShadow: "0 2px 5px rgba(0,0,0,0.1)"
-        }}>
-          <h3>Connected!</h3>
-          <p><strong>Address:</strong> {address}</p>
-          <button 
-            onClick={openConnectModal}
-            style={{
-              backgroundColor: "#e74c3c",
-              color: "white",
-              border: "none",
-              padding: "8px 16px",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontWeight: "bold",
-              marginTop: "10px"
-            }}
-          >
-            Manage Connection
-          </button>
+        <CreditScoreTrendChart data={creditScoreTrendData} />
+        <div className="grid grid-cols-1 md:grid-cols- gap-4 my-6">
+          <HighlightCard month="June" year="2023" />
+          <div />
         </div>
-      )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <PaymentHistoryChart data={paymentHistoryData} />
+          <ActiveLoans
+            originalAmount={10000}
+            monthlyPayment={500}
+            nextPaymentDue="2025-05-01"
+            remainingPayments={10}
+            projectedCompletion="2025-12-01"
+          />
+        </div>
+        <FinancialOpportunities opportunities={financialOpportunities} />
+      </div>
     </div>
   );
-}
-
-function App() {
-  return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>AppKit Wallet Connection</h1>
-      <ConnectButton />
-    </div>
-  );
-}
+};
 
 export default App;
