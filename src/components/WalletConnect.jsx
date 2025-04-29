@@ -26,7 +26,7 @@ export default function ConnectButton() {
       {!isConnected ? (
         <button 
           onClick={openConnectModal} 
-          className="bg-button-gradient text-white font-bold py-2 px-6 rounded cursor-pointer"
+          className="bg-button-gradient text-white font-bold py-2 px-6 rounded-lg cursor-pointer"
         >
           Connect Wallet
         </button>
