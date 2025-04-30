@@ -42,6 +42,7 @@ const Navbar = () => {
         Launch App
       </Link>
 
+
       {/* Mobile Menu Dropdown */}
       {menuOpen && (
         <div className="absolute top-full left-0 w-full bg-[#1a093a] shadow-lg flex flex-col items-center py-6 space-y-4 md:hidden animate-fade-in z-50">
