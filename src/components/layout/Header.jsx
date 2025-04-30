@@ -21,7 +21,7 @@ const Header = ({ username }) => {
           <div className="mr-2">
             <img src="/api/placeholder/24/24" alt="User" className="w-6 h-6 rounded-full" />
           </div>
-          <span className="text-gray-200 text-sm">Linda Samson</span>
+          <span className="text-gray-200 text-sm">Akorede Abidoye</span>
         </div>
       </div>
     </div>

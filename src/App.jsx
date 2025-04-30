@@ -43,14 +43,15 @@ const App = () => {
     <div className="bg-gray-900 min-h-screen text-white">
       <Sidebar />
       <div className="ml-16 p-6">
-        <Header username="Fred" />
+        <Header username="koded" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <CreditScoreCard score={760} change={3} period="3 months" />
           <AvailableLoansCard amount={12000} />
           <QuarterGoalCard percentage={84} />
         </div>
         <CreditScoreTrendChart data={creditScoreTrendData} />
-        <div className="grid grid-cols-1 md:grid-cols- gap-4 my-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+          <HighlightCard month="June" year="2023" />
           <HighlightCard month="June" year="2023" />
           <div />
         </div>

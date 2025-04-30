@@ -7,9 +7,9 @@ const PaymentHistoryChart = ({ data }) => {
   return (
     <Card>
       <h3 className="text-gray-400 text-sm mb-4">Payment History</h3>
-      <ResponsiveContainer width="100%" height={150}>
+      <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
-          <XAxis dataKey="day" stroke="#A0AEC0" />
+          <XAxis dataKey="month" stroke="#A0AEC0" />
           <YAxis stroke="#A0AEC0" />
           <Bar dataKey="amount" fill="#48BB78" radius={[4, 4, 0, 0]} />
         </BarChart>

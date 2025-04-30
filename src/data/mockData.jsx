@@ -1,23 +1,29 @@
 // src/data/mockData.jsx
 export const creditScoreTrendData = [
-  { year: '2018', score: 650 },
-  { year: '2019', score: 700 },
+  { year: '2018', score: 610 },
+  { year: '2019', score: 450 },
   { year: '2020', score: 680 },
   { year: '2021', score: 720 },
-  { year: '2022', score: 740 },
+  { year: '2022', score: 550 },
   { year: '2023', score: 760 },
   { year: '2024', score: 770 },
 ];
 
 export const paymentHistoryData = [
-  { day: 'Sun', amount: 1500 },
-  { day: 'Mon', amount: 1000 },
-  { day: 'Tue', amount: 1300 },
-  { day: 'Wed', amount: 800 },
-  { day: 'Thu', amount: 1100 },
-  { day: 'Fri', amount: 600 },
-  { day: 'Sat', amount: 900 },
+  { month: 'Jan', amount: 1500 },
+  { month: 'Feb', amount: 1000 },
+  { month: 'Mar', amount: 1300 },
+  { month: 'Apr', amount: 800 },
+  { month: 'May', amount: 1100 },
+  { month: 'Jun', amount: 600 },
+  { month: 'Jul', amount: 900 },
+  { month: 'Aug', amount: 1200 },
+  { month: 'Sep', amount: 950 },
+  { month: 'Oct', amount: 1050 },
+  { month: 'Nov', amount: 1600 },
+  { month: 'Dec', amount: 1400 },
 ];
+
 
 export const financialOpportunities = [
   { title: 'Personal Loan', description: 'Quick approval with an interest rate of 6.5%' },
