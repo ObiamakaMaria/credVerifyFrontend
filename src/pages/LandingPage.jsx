@@ -7,7 +7,6 @@ import Community from '../components/landingpage/Community';
 import IconsBar from '../components/landingpage/IconsBar';
 import Footer from '../components/layout/Footer';
 import OnchainCreditSection from '../components/landingpage/OnchainCreditSection';
-import CreditScoreEngineSection from '../components/landingpage/CreditScoreEngineSection';
 
 const LandingPage = () => { // Renamed from Index
   const howItWorksRef = useRef(null);
@@ -25,7 +24,6 @@ const LandingPage = () => { // Renamed from Index
       {/* <Features /> */}
       {/* <Community /> */}
       <OnchainCreditSection />
-      <CreditScoreEngineSection />
       <Footer />
     </div>
   );
