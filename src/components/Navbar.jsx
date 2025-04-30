@@ -1,5 +1,6 @@
 import React from 'react'
 import ConnectButton from './WalletConnect'; // Import the connect button
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
@@ -19,9 +20,13 @@ const Navbar = () => {
       </div>
 
       {/* Right side: Connect Wallet Button */}
-      <div>
+      {/* <div>
         <ConnectButton />
-      </div>
+      </div> */}
+
+      <Link to="/dashboard" className="hidden md:block">
+        Launch App
+      </Link>
     </nav>
   )
 }

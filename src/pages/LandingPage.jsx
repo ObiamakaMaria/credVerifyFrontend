@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
-import HeroSection from './HeroSection';
-import WhySection from './WhySection';
-import HowItWorks from './HowItWorks';
-import Features from './Features';
-import Community from './Community';
-import IconsBar from './IconsBar';
+import HeroSection from '../components/landingpage/HeroSection';
+import WhySection from '../components/landingpage/WhySection';
+import HowItWorks from '../components/landingpage/HowItWorks';
+import Features from '../components/landingpage/Features';
+import Community from '../components/landingpage/Community';
+import IconsBar from '../components/landingpage/IconsBar';
 
 const LandingPage = () => { // Renamed from Index
   const howItWorksRef = useRef(null);

@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../../components/Navbar";
+import Navbar from "../Navbar";
 import { FcSearch } from "react-icons/fc";
 
 const HeroSection = () => {
