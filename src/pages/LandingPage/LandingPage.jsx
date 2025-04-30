@@ -5,6 +5,7 @@ import HowItWorks from './HowItWorks';
 import Features from './Features';
 import Community from './Community';
 import IconsBar from './IconsBar';
+
 const LandingPage = () => { // Renamed from Index
   const howItWorksRef = useRef(null);
 
@@ -15,7 +16,7 @@ const LandingPage = () => { // Renamed from Index
   return (
     <div>
       <HeroSection onExploreClick={handleExploreClick} />
-      <IconsBar />
+      <IconsBar/>
       <WhySection />
       <HowItWorks ref={howItWorksRef} />
       <Features />
