@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Sidebar from './components/layout/Sidebar';
-import Header from './components/layout/Header';
+import Header from './components/layout/Header'; // Make sure this exists
+import NotFound from './components/NotFound';
 
 // Page Components
 import Dashboard from './pages/Dashboard';
 import CreateCreditBuilderLoan from './pages/CreateCreditBuilderLoan';
+import LandingPage from './pages/LandingPage';
 
 // Loading and Error Components
 const LoadingScreen = () => (
@@ -20,12 +22,13 @@ const ErrorScreen = ({ message }) => (
   </div>
 );
 
-const MainLayout = ({ children }) => (
+// Layout component that includes the outlet for nested routes
+const MainLayout = () => (
   <div className="bg-gray-900 min-h-screen text-white">
     <Sidebar />
     <div className="ml-16 p-6">
       <Header username="koded" />
-      {children}
+      <Outlet />
     </div>
   </div>
 );
@@ -35,10 +38,8 @@ const App = () => {
   const [error, setError] = useState(null);
   
   useEffect(() => {
-    // Simulate API call
     const fetchData = async () => {
       try {
-        // Replace with actual API calls when ready
         await new Promise(resolve => setTimeout(resolve, 1000));
         setLoading(false);
       } catch (err) {
@@ -50,44 +51,26 @@ const App = () => {
     fetchData();
   }, []);
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
-
-  if (error) {
-    return <ErrorScreen message={error} />;
-  }
+  if (loading) return <LoadingScreen />;
+  if (error) return <ErrorScreen message={error} />;
 
   return (
     <Router>
-      <MainLayout>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/create-credit-builder-loan" element={<CreateCreditBuilderLoan />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </MainLayout>
+      <Routes>
+        {/* Landing page without layout */}
+        <Route path="/" element={<LandingPage />} />
+        
+        {/* All other routes with MainLayout */}
+        <Route path="/" element={<MainLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="create-credit-builder-loan" element={<CreateCreditBuilderLoan />} />
+        </Route>  
+        
+        {/* 404 route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </Router>
   );
 };
-import React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LandingPage from './pages/LandingPage/LandingPage';
-import NotFound from './components/NotFound';
-
-function App() {
-  return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-      
-    </div>
-  );
-}
 
 export default App;
