@@ -5,6 +5,8 @@ import HowItWorks from '../components/landingpage/HowItWorks';
 import Features from '../components/landingpage/Features';
 import Community from '../components/landingpage/Community';
 import IconsBar from '../components/landingpage/IconsBar';
+import Footer from '../components/layout/Footer';
+import OnchainCreditSection from '../components/landingpage/OnchainCreditSection';
 
 const LandingPage = () => { // Renamed from Index
   const howItWorksRef = useRef(null);
@@ -21,6 +23,8 @@ const LandingPage = () => { // Renamed from Index
       <HowItWorks ref={howItWorksRef} />
       <Features />
       <Community />
+      <OnchainCreditSection />
+      <Footer />
     </div>
   );
 };
