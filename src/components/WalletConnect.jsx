@@ -3,7 +3,7 @@ import { appKit } from "../config/AppKit.js";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { shortenAddress } from "../utils/index.js";
 
-export default function ConnectButton() {
+export default function utton() {
   const { address, isConnected } = useAppKitAccount();
 
   console.log("useAppKitAccount State: isConnected=", isConnected, "address=", address);
