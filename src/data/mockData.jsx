@@ -26,8 +26,8 @@ export const paymentHistoryData = [
 
 
 export const financialOpportunities = [
-  { title: 'Personal Loan', description: 'Quick approval with an interest rate of 6.5%' },
-  { title: 'Home Loan', description: 'Flexible payment plans and low interest rates' },
-  { title: 'Car Loan', description: 'Fast processing with low rates' },
-  { title: 'Personal Loan', description: 'Quick approval with an interest rate of 6.5%' },
+  { title: 'Aave', description: 'DeFi Lending with Quick approvals' },
+  { title: 'Arch Lending', description: 'Flexible payment plans and low interest rates' },
+  { title: 'Compound', description: 'Ethereum based DeFi for Fast processing with low rates' },
+  { title: 'Summer.Fi', description: 'Trusted Lend and Borrow crypto assets' },
 ];

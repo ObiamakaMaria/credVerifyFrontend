@@ -8,6 +8,9 @@ import NotFound from './components/NotFound';
 import Dashboard from './pages/Dashboard';
 import CreateCreditBuilderLoan from './pages/CreateCreditBuilderLoan';
 import LandingPage from './pages/LandingPage';
+import HowItWorksPage from './pages/HowItWorks';
+import FeaturesPage from './pages/Features';
+import LaunchPage from './pages/LaunchPage';
 
 // Loading and Error Components
 const LoadingScreen = () => (
@@ -59,13 +62,17 @@ const App = () => {
       <Routes>
         {/* Landing page without layout */}
         <Route path="/" element={<LandingPage />} />
-        
+        {/* How It Works page without layout */}
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
+        {/* Features page without layout */}
+        <Route path="/features" element={<FeaturesPage />} />
+        {/* Launch page without layout */}
+        <Route path="/launch" element={<LaunchPage />} />
         {/* All other routes with MainLayout */}
         <Route path="/" element={<MainLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="create-credit-builder-loan" element={<CreateCreditBuilderLoan />} />
         </Route>  
-        
         {/* 404 route */}
         <Route path="*" element={<NotFound />} />
       </Routes>

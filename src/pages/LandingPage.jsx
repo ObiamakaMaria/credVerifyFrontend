@@ -19,10 +19,10 @@ const LandingPage = () => { // Renamed from Index
     <div>
       <HeroSection onExploreClick={handleExploreClick} />
       <IconsBar/>
-      <WhySection />
-      <HowItWorks ref={howItWorksRef} />
-      <Features />
-      <Community />
+      {/* <WhySection /> */}
+      {/* <HowItWorks ref={howItWorksRef} /> */}
+      {/* <Features /> */}
+      {/* <Community /> */}
       <OnchainCreditSection />
       <Footer />
     </div>

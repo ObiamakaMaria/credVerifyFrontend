@@ -4,7 +4,7 @@ import { liskSepolia, mainnet } from "@reown/appkit/networks";
 
 export const supportedNetworks = [ liskSepolia, mainnet];
 
-// const projectId = process.env.VITE_REOWN_PROJECT_ID;
+const projectId = process.env.VITE_REOWN_PROJECT_ID;
 
 export const metadata = {
     name: "My dApp",
@@ -17,7 +17,7 @@ export const appKit = createAppKit({
     adapters: [new EthersAdapter()],
     networks: [liskSepolia, mainnet],
     metadata,
-    // projectId,
+    projectId,
     features: {
       analytics: true,
     },

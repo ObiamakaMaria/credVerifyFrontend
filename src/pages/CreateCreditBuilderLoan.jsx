@@ -11,6 +11,7 @@ const CreateCreditBuilderLoan = () => {
   const [amountInput, setAmountInput] = useState(formData.amount);
   const [isLoading, setIsLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   
   // Mock data for UI demonstration
   const account = "0x123...";
@@ -58,13 +59,26 @@ const CreateCreditBuilderLoan = () => {
   
   // Mock submission action
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
     setIsLoading(true);
     // Simulate transaction
     setTimeout(() => {
-      alert("Credit builder loan created successfully!");
       setIsLoading(false);
+      setShowSuccessModal(true);
     }, 1500);
+  };
+
+   // Handle returning to dashboard
+   const handleReturnToDashboard = () => {
+    setShowSuccessModal(false);
+    // Navigate to dashboard
+    window.location.href = '/dashboard';
+    // Alternative for React Router if it's set up in your application:
+    // import { useNavigate } from 'react-router-dom';
+    // const navigate = useNavigate();
+    // navigate('/dashboard');
   };
   
   // Simple calculation for display
@@ -100,7 +114,7 @@ const CreateCreditBuilderLoan = () => {
             that will be held until the loan is repaid.
           </p>
           
-          <form onSubmit={handleSubmit}>
+          <div>
             <div className="mb-4">
               <label className="block text-gray-300 mb-2">Select Stablecoin</label>
               <select
@@ -219,14 +233,15 @@ const CreateCreditBuilderLoan = () => {
               </button>
             ) : (
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
                 disabled={isLoading}
               >
                 {isLoading ? "Processing..." : "Create Credit Builder Loan"}
               </button>
             )}
-          </form>
+          </div>
         </div>
       ) : (
         <div className="text-center p-8 bg-gray-800 rounded-lg">
@@ -237,6 +252,47 @@ const CreateCreditBuilderLoan = () => {
           >
             Connect Wallet
           </button>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black bg-opacity-50"></div>
+          <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full mx-4 z-10 border border-gray-700 shadow-xl">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
+                <svg className="h-10 w-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2">Application Submitted!</h3>
+              <p className="text-gray-300 mb-6">
+                Your Credit Builder Loan application for ${formData.amount} has been successfully submitted.
+                Your loan will be processed shortly.
+              </p>
+              <div className="p-4 bg-gray-700 rounded-md mb-6 text-left">
+                <div className="flex justify-between mb-1">
+                  <span>Transaction Hash:</span>
+                  <span className="text-blue-400 truncate">0x8f7d...3e4f</span>
+                </div>
+                <div className="flex justify-between mb-1">
+                  <span>Collateral Amount:</span>
+                  <span>${formData.amount}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Monthly Payment:</span>
+                  <span>${monthlyPayment}</span>
+                </div>
+              </div>
+              <button
+                onClick={handleReturnToDashboard}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-200"
+              >
+                Done
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
