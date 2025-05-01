@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import CreateCreditBuilderLoan from './pages/CreateCreditBuilderLoan';
 import LandingPage from './pages/LandingPage';
 import HowItWorksPage from './pages/HowItWorks';
+import FeaturesPage from './pages/Features';
 
 // Loading and Error Components
 const LoadingScreen = () => (
@@ -62,6 +63,8 @@ const App = () => {
         <Route path="/" element={<LandingPage />} />
         {/* How It Works page without layout */}
         <Route path="/how-it-works" element={<HowItWorksPage />} />
+        {/* Features page without layout */}
+        <Route path="/features" element={<FeaturesPage />} />
         {/* All other routes with MainLayout */}
         <Route path="/" element={<MainLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
