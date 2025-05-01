@@ -1,161 +1,83 @@
-import React, { useEffect, useState } from 'react';
-import { createAppKit } from "@reown/appkit/react";
-import { EthersAdapter } from "@reown/appkit-adapter-ethers";
-import { arbitrum, mainnet } from "@reown/appkit/networks";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import Sidebar from './components/layout/Sidebar';
+import Header from './components/layout/Header'; // Make sure this exists
+import NotFound from './components/NotFound';
 
-const projectId = process.env.VITE_REOWN_PROJECT_ID;
+// Page Components
+import Dashboard from './pages/Dashboard';
+import CreateCreditBuilderLoan from './pages/CreateCreditBuilderLoan';
+import LandingPage from './pages/LandingPage';
+import HowItWorksPage from './pages/HowItWorks';
+import FeaturesPage from './pages/Features';
+import LaunchPage from './pages/LaunchPage';
 
-const metadata = {
-  name: "My dApp",
-  description: "My Web3 application",
-  url: window.location.origin,
-  icons: ["https://mydapp.com/icon.png"],
-};
+// Loading and Error Components
+const LoadingScreen = () => (
+  <div className="flex items-center justify-center h-screen bg-gray-900">
+    <div className="text-white">Loading...</div>
+  </div>
+);
 
-const appKit = createAppKit({
-  adapters: [new EthersAdapter()],
-  networks: [arbitrum, mainnet],
-  metadata,
-  projectId,
-  features: {
-    analytics: true,
-  },
-});
+const ErrorScreen = ({ message }) => (
+  <div className="flex items-center justify-center h-screen bg-gray-900">
+    <div className="text-red-500">{message}</div>
+  </div>
+);
 
-function ConnectButton() {
-  const [connected, setConnected] = useState(false);
-  const [address, setAddress] = useState("");
+// Layout component that includes the outlet for nested routes
+const MainLayout = () => (
+  <div className="bg-gray-900 min-h-screen text-white">
+    <Sidebar />
+    <div className="ml-16 p-6">
+      <Header username="koded" />
+      <Outlet />
+    </div>
+  </div>
+);
 
+const App = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   useEffect(() => {
-    const checkConnection = async () => {
+    const fetchData = async () => {
       try {
-        if (appKit.isConnected?.()) {
-          const accounts = await appKit.getAccounts?.();
-          if (accounts && accounts.length > 0) {
-            setConnected(true);
-            setAddress(accounts[0]);
-          }
-        }
-      } catch (error) {
-        console.error("Connection check error:", error);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load application data');
+        setLoading(false);
       }
     };
-
-    checkConnection();
-
-    const handleAccountsChanged = (accounts) => {
-      if (accounts && accounts.length > 0) {
-        setConnected(true);
-        setAddress(accounts[0]);
-      } else {
-        setConnected(false);
-        setAddress("");
-      }
-    };
-
-    appKit.on?.('accountsChanged', handleAccountsChanged);
-
-    return () => {
-      appKit.off?.('accountsChanged', handleAccountsChanged);
-    };
+    
+    fetchData();
   }, []);
 
-  const openConnectModal = () => {
-    try {
-      console.log("Opening modal...");
-      if (appKit.open) {
-        appKit.open();
-      } else if (appKit.connect) {
-        appKit.connect();
-      }
-    } catch (error) {
-      console.error("Error opening modal:", error);
-    }
-  };
-
-  const openNetworkModal = () => {
-    try {
-      console.log("Opening network modal...");
-      if (appKit.open) {
-        appKit.open({ view: "Networks" });
-      }
-    } catch (error) {
-      console.error("Error opening network modal:", error);
-    }
-  };
+  if (loading) return <LoadingScreen />;
+  if (error) return <ErrorScreen message={error} />;
 
   return (
-    <div>
-      {!connected ? (
-        <div>
-          <button 
-            onClick={openConnectModal} 
-            style={{
-              backgroundColor: "#3498db",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontWeight: "bold",
-              marginRight: "10px"
-            }}
-          >
-            Connect Wallet
-          </button>
-          
-          <button 
-            onClick={openNetworkModal} 
-            style={{
-              backgroundColor: "#2ecc71",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontWeight: "bold"
-            }}
-          >
-            Select Network
-          </button>
-        </div>
-      ) : (
-        <div style={{ 
-          padding: "15px", 
-          backgroundColor: "#f8f9fa",
-          borderRadius: "8px",
-          boxShadow: "0 2px 5px rgba(0,0,0,0.1)"
-        }}>
-          <h3>Connected!</h3>
-          <p><strong>Address:</strong> {address}</p>
-          <button 
-            onClick={openConnectModal}
-            style={{
-              backgroundColor: "#e74c3c",
-              color: "white",
-              border: "none",
-              padding: "8px 16px",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontWeight: "bold",
-              marginTop: "10px"
-            }}
-          >
-            Manage Connection
-          </button>
-        </div>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        {/* Landing page without layout */}
+        <Route path="/" element={<LandingPage />} />
+        {/* How It Works page without layout */}
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
+        {/* Features page without layout */}
+        <Route path="/features" element={<FeaturesPage />} />
+        {/* Launch page without layout */}
+        <Route path="/launch" element={<LaunchPage />} />
+        {/* All other routes with MainLayout */}
+        <Route path="/" element={<MainLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="create-credit-builder-loan" element={<CreateCreditBuilderLoan />} />
+        </Route>  
+        {/* 404 route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
-}
-
-function App() {
-  return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>AppKit Wallet Connection</h1>
-      <ConnectButton />
-    </div>
-  );
-}
+};
 
 export default App;

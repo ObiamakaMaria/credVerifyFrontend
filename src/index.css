@@ -1,3 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Amarante&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400&family=Space+Grotesk:wght@700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .bg-navbar-gradient {
+    background: linear-gradient(180deg, #110420 -47.47%, rgba(47, 47, 47, 0) 226.77%),
+      url('/src/assets/Navbar-bg.png');
+    /* background-color: #1e0739; */
+  }
+  .bg-button-gradient {
+    background: linear-gradient(94.36deg, #9333EA -27.25%, #2DD4BF 118.45%);
+  }
+  .bg-hero-gradient {
+    background:
+    linear-gradient(180deg, #140428 -47.47%, rgba(47, 47, 47, 0) 226.77%),
+      url('/src/assets/Hero-bg.png');
+      /* background-color:#1e0739; */
+    
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    /* background-blend-mode: color-dodge; */
+    background-blend-mode: multiply;
+  }
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -24,8 +54,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -66,3 +94,6 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+
