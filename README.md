@@ -1,9 +1,8 @@
-
 # Product Requirements Document: Onchain Credit Score Builder Loans
 
 ## Executive Summary
 
-### Product Vision
+### Product Vision:
 An innovative decentralized platform that helps individuals build verifiable credit histories on the blockchain through structured credit builder loans, creating financial inclusion for the underbanked while generating sustainable revenue through various service fees and marketplace opportunities.
 
 ### Problem Statement
