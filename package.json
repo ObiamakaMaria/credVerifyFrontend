@@ -13,7 +13,7 @@
     "@privy-io/react-auth": "^2.12.0",
     "@reown/appkit": "^1.7.3",
     "@reown/appkit-adapter-ethers": "^1.7.3",
-    "ethers": "^6.13.7",
+    "ethers": "^6.14.0",
     "framer-motion": "^12.9.2",
     "lucide-react": "^0.507.0",
     "react": "^19.0.0",

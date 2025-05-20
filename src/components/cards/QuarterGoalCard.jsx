@@ -3,11 +3,15 @@ import React from 'react';
 import Card from './Card';
 import CircularProgressBar from '../common/CircularProgressBar';
 
-const QuarterGoalCard = ({ percentage }) => {
+const QuarterGoalCard = ({ percentage, loanDetails }) => {
+  // Use loanCompletion from loanDetails if available, otherwise use the provided percentage
+  const completionPercentage = loanDetails && loanDetails.loanCompletion !== undefined
+    ? loanDetails.loanCompletion
+    : percentage;
   return (
     <Card className="flex flex-col items-center">
-      <h3 className="text-gray-400 text-sm mb-4">Quarter Goal</h3>
-      <CircularProgressBar percentage={percentage} />
+      <h3 className="text-gray-400 text-sm mb-4">Loan Completion</h3>
+      <CircularProgressBar percentage={completionPercentage} />
       <div className="flex justify-between items-center w-full mt-6">
         <div className="text-gray-400 text-xs">All goals</div>
         <div className="text-gray-400">

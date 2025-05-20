@@ -64,7 +64,7 @@ const Navbar = () => {
         className={`hidden md:block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg px-4 py-2 ml-4 hover:opacity-90 transition
           ${location.pathname === '/launch' ? 'ring-2 ring-purple-400' : ''}`}
       >
-        Launch App
+        Connect Wallet
       </Link>
 
       {/* Mobile Menu Dropdown */}
