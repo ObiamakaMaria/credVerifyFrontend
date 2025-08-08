@@ -33,8 +33,7 @@ const Navbar = () => {
       {/* Left side: Logo and Title */}
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
-          <img src="/src/assets/CredVerify-Logo.png" alt="CredVerify Logo" className="h-8 w-auto" />
-          <h1 className="font-amarante text-2xl text-white ml-3">CredVerify</h1>
+          <img src="/src/assets/logo.png" alt="CredVerify Logo" className="h-14 w-auto" />
         </Link>
       </div>
 
@@ -64,7 +63,7 @@ const Navbar = () => {
         className={`hidden md:block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg px-4 py-2 ml-4 hover:opacity-90 transition
           ${location.pathname === '/launch' ? 'ring-2 ring-purple-400' : ''}`}
       >
-        Launch App
+        Connect Wallet
       </Link>
 
       {/* Mobile Menu Dropdown */}

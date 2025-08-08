@@ -6,7 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 const PaymentHistoryChart = ({ data }) => {
   return (
     <Card>
-      <h3 className="text-gray-400 text-sm mb-4">Payment History</h3>
+      <h3 className="text-gray-400 text-sm mb-4">Credit Score</h3>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
           <XAxis dataKey="month" stroke="#A0AEC0" />

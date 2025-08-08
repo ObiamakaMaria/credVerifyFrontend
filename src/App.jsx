@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header'; // Make sure this exists
 import NotFound from './components/NotFound';
+import { ContractProvider } from './utils/ContractContext';
 
 // Page Components
 import Dashboard from './pages/Dashboard';
@@ -58,8 +59,9 @@ const App = () => {
   if (error) return <ErrorScreen message={error} />;
 
   return (
-    <Router>
-      <Routes>
+    <ContractProvider>
+      <Router>
+        <Routes>
         {/* Landing page without layout */}
         <Route path="/" element={<LandingPage />} />
         {/* How It Works page without layout */}
@@ -75,8 +77,9 @@ const App = () => {
         </Route>  
         {/* 404 route */}
         <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </ContractProvider>
   );
 };
 

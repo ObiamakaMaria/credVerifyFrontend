@@ -1,5 +1,6 @@
 // src/components/loans/ActiveLoans.jsx
 import React from 'react';
+import MakePayment from './MakePayment';
 import Card from '../cards/Card';
 
 const ActiveLoans = ({
@@ -8,6 +9,8 @@ const ActiveLoans = ({
   nextPaymentDue,
   remainingPayments,
   projectedCompletion,
+  loanDetails,
+  onPaymentSuccess,
 }) => {
   const formatCurrency = (amount) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount);
@@ -36,6 +39,11 @@ const ActiveLoans = ({
           <span className="text-gray-400 text-sm">Projected Completion</span>
           <span className="text-white font-bold">{projectedCompletion}</span>
         </div>
+      </div>
+
+      {/* Payment Button */}
+      <div className="mt-4 pt-4 border-t border-gray-700">
+        <MakePayment loanDetails={loanDetails} onPaymentSuccess={onPaymentSuccess} />
       </div>
     </Card>
   );
