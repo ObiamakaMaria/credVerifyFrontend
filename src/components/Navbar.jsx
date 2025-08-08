@@ -33,8 +33,7 @@ const Navbar = () => {
       {/* Left side: Logo and Title */}
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
-          <img src="/src/assets/CredVerify-Logo.png" alt="CredVerify Logo" className="h-8 w-auto" />
-          <h1 className="font-amarante text-2xl text-white ml-3">CredVerify</h1>
+          <img src="/src/assets/logo.png" alt="CredVerify Logo" className="h-14 w-auto" />
         </Link>
       </div>
 
