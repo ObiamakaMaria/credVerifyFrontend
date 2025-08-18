@@ -1,0 +1,28 @@
+﻿// src/components/loans/FinancialOpportunities.tsx
+import React from 'react';
+import LoanOpportunityCard from './LoanOpportunityCard';
+
+interface FinancialOpportunitiesProps {
+  opportunities: Array<{
+    title: string;
+    description: string;
+  }>;
+}
+
+const FinancialOpportunities: React.FC<FinancialOpportunitiesProps> = ({ opportunities }) => {
+  return (
+    <div>
+      <h3 className="text-gray-400 text-sm mb-4">Loan Lending Platforms</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {opportunities.map((opp, index) => (
+          <LoanOpportunityCard key={index} opportunity={opp} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default FinancialOpportunities;
+
+
+
