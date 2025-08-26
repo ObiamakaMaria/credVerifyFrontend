@@ -1,18 +1,38 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useAppKitAccount } from '@reown/appkit/react';
 import * as contractService from './contractService';
+import type { LoanData, ContractResult, StablecoinNames } from '../types';
+
+// Define context type
+interface ContractContextType {
+  creditScore: number;
+  loanDetails: LoanData | null;
+  approvedStablecoins: string[];
+  loading: boolean;
+  error: string | null;
+  stablecoinNames: StablecoinNames;
+  refreshData: () => Promise<void>;
+  createLoan: (stablecoinAddress: string, amount: number, tokenURI: string) => Promise<ContractResult>;
+  makePayment: (borrowerAddress: string) => Promise<ContractResult>;
+  approveStablecoin: (stablecoinAddress: string, amount: number) => Promise<ContractResult>;
+  isStablecoinApproved: (stablecoinAddress: string) => Promise<boolean>;
+}
 
 // Create context
-const ContractContext = createContext();
+const ContractContext = createContext<ContractContextType | undefined>(undefined);
 
-export const ContractProvider = ({ children }) => {
+interface ContractProviderProps {
+  children: ReactNode;
+}
+
+export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) => {
   const { address, isConnected } = useAppKitAccount();
-  const [creditScore, setCreditScore] = useState(0);
-  const [loanDetails, setLoanDetails] = useState(null);
-  const [approvedStablecoins, setApprovedStablecoins] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [stablecoinNames, setStablecoinNames] = useState({});
+  const [creditScore, setCreditScore] = useState<number>(0);
+  const [loanDetails, setLoanDetails] = useState<LoanData | null>(null);
+  const [approvedStablecoins, setApprovedStablecoins] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [stablecoinNames, setStablecoinNames] = useState<StablecoinNames>({});
 
   // Fetch contract data when wallet is connected
   useEffect(() => {
@@ -31,8 +51,8 @@ export const ContractProvider = ({ children }) => {
         setApprovedStablecoins(stablecoins);
 
         // Create a mapping of stablecoin addresses to names
-        const names = {};
-        stablecoins.forEach((addr) => {
+        const names: StablecoinNames = {};
+        stablecoins.forEach((addr: string) => {
           names[addr] = contractService.getStablecoinName(addr);
         });
         setStablecoinNames(names);
@@ -101,35 +121,58 @@ export const ContractProvider = ({ children }) => {
   }, [isConnected, address]);
 
   // Approve stablecoin for spending
-  const approveStablecoin = async (stablecoinAddress, amount) => {
+  const approveStablecoin = async (stablecoinAddress: string, amount: number): Promise<ContractResult> => {
+    if (!address) {
+      return { success: false, error: 'Wallet not connected' };
+    }
+
     setLoading(true);
     setError(null);
     
     try {
-      const tx = await contractService.approveStablecoin(stablecoinAddress, amount);
-      await tx.wait();
+      console.log('Approving stablecoin:', { stablecoinAddress, amount });
+      
+      const result = await contractService.approveStablecoin(stablecoinAddress, amount);
+      
+      if (result.success) {
+        console.log('Stablecoin approved successfully:', result.txHash);
+      } else {
+        console.error('Stablecoin approval failed:', result.error);
+      }
+      
       setLoading(false);
-      return true;
+      return result;
     } catch (err) {
       console.error('Error approving stablecoin:', err);
-      setError('Failed to approve stablecoin. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to approve stablecoin. Please try again.';
+      setError(errorMessage);
       setLoading(false);
-      return false;
+      return { success: false, error: errorMessage };
     }
   };
 
   // Create credit builder loan
-  const createLoan = async (stablecoinAddress, amount, tokenURI) => {
+  const createLoan = async (stablecoinAddress: string, amount: number, tokenURI: string): Promise<ContractResult> => {
+    if (!address) {
+      return { success: false, error: 'Wallet not connected' };
+    }
+
     setLoading(true);
     setError(null);
     
     try {
-      const tx = await contractService.createCreditBuilderLoan(stablecoinAddress, amount, tokenURI);
-      await tx.wait();
+      console.log('Creating loan with parameters:', { stablecoinAddress, amount, tokenURI });
       
-      // Check if we're using mock data
-      const usingMockData = import.meta.env.VITE_CONTRACT_ADDRESS?.includes('0x123456789') || 
-                          !import.meta.env.VITE_CONTRACT_ADDRESS;
+      const result = await contractService.createCreditBuilderLoan(stablecoinAddress, amount, tokenURI);
+      
+      if (!result.success) {
+        setLoading(false);
+        return result;
+      }
+
+      // Check if we're using mock data or real blockchain
+      const usingMockData = !import.meta.env.VITE_CONTRACT_ADDRESS || 
+                          import.meta.env.VITE_CONTRACT_ADDRESS.includes('0x123456789');
       
       if (usingMockData) {
         // Create mock loan data for development
@@ -137,21 +180,24 @@ export const ContractProvider = ({ children }) => {
         const nextMonth = new Date(now);
         nextMonth.setMonth(nextMonth.getMonth() + 1);
         
-        const mockLoan = {
-          borrower: address,
-          stablecoin: stablecoinAddress,
-          loanAmount: amount.toString(),
-          collateralAmount: amount.toString(),
-          monthlyPaymentAmount: (parseFloat(amount) * 0.09 / 12).toFixed(2),
-          startDate: now,
-          nextPaymentDue: nextMonth,
-          totalPaid: '0',
-          remainingPayments: 12,
-          nftId: Math.floor(Math.random() * 1000),
+        const mockLoan: LoanData = {
           active: true,
-          completed: false,
+          amount: amount.toString(),
+          stablecoin: stablecoinAddress,
+          monthlyPayment: (amount * 0.09 / 12).toFixed(2),
+          paymentsRemaining: 12,
+          totalPayments: 12,
+          nextPaymentDue: nextMonth.toISOString(),
+          collateralAmount: (amount * 1.5).toString(),
+          borrower: address,
+          loanAmount: amount.toString(),
+          monthlyPaymentAmount: (amount * 0.09 / 12).toFixed(2),
+          startDate: now,
+          totalPaid: '0',
           paymentCount: 0,
-          loanCompletion: 0 // Initialize loan completion at 0%
+          remainingPayments: 12,
+          loanCompletion: 0,
+          term: 12
         };
         
         // Set initial credit score to 550 when loan is created
@@ -163,27 +209,33 @@ export const ContractProvider = ({ children }) => {
         
         // Update state
         setLoanDetails(mockLoan);
-        setLoading(false);
-        return { success: true, txHash: tx.hash };
-      }
-      
-      // For real blockchain interaction
-      try {
-        // Refresh loan details
-        const loan = await contractService.getLoanDetails(address);
-        setLoanDetails(loan);
-      } catch (loanError) {
-        console.warn('Error fetching loan after creation:', loanError);
-        // Don't fail the whole operation if we can't fetch the loan
+        
+        console.log('Mock loan created successfully:', mockLoan);
+      } else {
+        // For real blockchain interaction, fetch updated loan details
+        try {
+          const loan = await contractService.getLoanDetails(address);
+          setLoanDetails(loan);
+          
+          // Also update credit score
+          const score = await contractService.getCreditScore(address);
+          setCreditScore(score);
+          
+          console.log('Real loan created successfully, updated data:', { loan, score });
+        } catch (loanError) {
+          console.warn('Error fetching loan after creation:', loanError);
+          // Don't fail the whole operation if we can't fetch the loan immediately
+        }
       }
       
       setLoading(false);
-      return { success: true, txHash: tx.hash };
+      return { success: true, txHash: result.txHash };
     } catch (err) {
       console.error('Error creating loan:', err);
-      setError('Failed to create loan. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create loan. Please try again.';
+      setError(errorMessage);
       setLoading(false);
-      return { success: false, error: err.message };
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -195,30 +247,36 @@ export const ContractProvider = ({ children }) => {
     setError(null);
     
     try {
-      const tx = await contractService.makePayment(address);
-      await tx.wait();
+      console.log('Making payment for borrower:', address);
+      
+      const result = await contractService.makePayment(address);
+      
+      if (!result.success) {
+        setLoading(false);
+        return result;
+      }
       
       // For mock data, update the loan details and credit score manually
-      const usingMockData = import.meta.env.VITE_CONTRACT_ADDRESS?.includes('0x123456789') || 
-                           !import.meta.env.VITE_CONTRACT_ADDRESS;
+      const usingMockData = !import.meta.env.VITE_CONTRACT_ADDRESS || 
+                           import.meta.env.VITE_CONTRACT_ADDRESS.includes('0x123456789');
       
       if (usingMockData && loanDetails) {
         // Update the mock loan
         const updatedLoan = { ...loanDetails };
-        updatedLoan.paymentCount += 1;
-        updatedLoan.remainingPayments -= 1;
+        updatedLoan.paymentCount = (updatedLoan.paymentCount || 0) + 1;
+        updatedLoan.remainingPayments = (updatedLoan.remainingPayments || 12) - 1;
         
         // Calculate total paid
-        const monthlyPayment = parseFloat(updatedLoan.monthlyPaymentAmount);
-        updatedLoan.totalPaid = (parseFloat(updatedLoan.totalPaid) + monthlyPayment).toString();
+        const monthlyPayment = parseFloat(updatedLoan.monthlyPaymentAmount || '0');
+        updatedLoan.totalPaid = (parseFloat(updatedLoan.totalPaid || '0') + monthlyPayment).toString();
         
         // Update next payment due date
         const nextMonth = new Date(updatedLoan.nextPaymentDue);
         nextMonth.setMonth(nextMonth.getMonth() + 1);
-        updatedLoan.nextPaymentDue = nextMonth;
+        updatedLoan.nextPaymentDue = nextMonth.toISOString();
         
         // Calculate loan completion percentage (0-100%)
-        updatedLoan.loanCompletion = Math.round((updatedLoan.paymentCount / 12) * 100);
+        updatedLoan.loanCompletion = Math.round(((updatedLoan.paymentCount || 0) / 12) * 100);
         
         // Update credit score - increase by 20-30 points per payment
         const currentScore = parseInt(localStorage.getItem(`creditScore_${address}`) || '550');
@@ -231,23 +289,32 @@ export const ContractProvider = ({ children }) => {
         // Update state
         setLoanDetails(updatedLoan);
         setCreditScore(newScore);
+        
+        console.log('Mock payment processed successfully:', { updatedLoan, newScore });
       } else {
         // Refresh loan details for real blockchain interaction
-        const loan = await contractService.getLoanDetails(address);
-        setLoanDetails(loan);
-        
-        // Refresh credit score
-        const score = await contractService.getCreditScore(address);
-        setCreditScore(score);
+        try {
+          const loan = await contractService.getLoanDetails(address);
+          setLoanDetails(loan);
+          
+          // Refresh credit score
+          const score = await contractService.getCreditScore(address);
+          setCreditScore(score);
+          
+          console.log('Real payment processed successfully, updated data:', { loan, score });
+        } catch (refreshError) {
+          console.warn('Error refreshing data after payment:', refreshError);
+        }
       }
       
       setLoading(false);
-      return { success: true, txHash: tx.hash };
+      return { success: true, txHash: result.txHash };
     } catch (err) {
       console.error('Error making payment:', err);
-      setError('Failed to make payment. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to make payment. Please try again.';
+      setError(errorMessage);
       setLoading(false);
-      return { success: false, error: err.message };
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -265,8 +332,8 @@ export const ContractProvider = ({ children }) => {
         setApprovedStablecoins(stablecoins);
         
         // Update stablecoin names
-        const names = {};
-        stablecoins.forEach((addr) => {
+        const names: StablecoinNames = {};
+        stablecoins.forEach((addr: string) => {
           names[addr] = contractService.getStablecoinName(addr);
         });
         setStablecoinNames(names);
@@ -312,6 +379,16 @@ export const ContractProvider = ({ children }) => {
     }
   };
 
+  // Check if stablecoin is approved
+  const isStablecoinApproved = async (stablecoinAddress: string): Promise<boolean> => {
+    try {
+      return await contractService.isStablecoinApproved(stablecoinAddress);
+    } catch (error) {
+      console.error('Error checking stablecoin approval:', error);
+      return false;
+    }
+  };
+
   return (
     <ContractContext.Provider
       value={{
@@ -325,6 +402,7 @@ export const ContractProvider = ({ children }) => {
         createLoan,
         makePayment,
         refreshData,
+        isStablecoinApproved,
       }}
     >
       {children}

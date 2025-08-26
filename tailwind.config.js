@@ -7,9 +7,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        amarante: ['Amarante', 'sans-serif'],
+        'satoshi': ['Satoshi', 'sans-serif'],
+        'amarante': ['Amarante', 'sans-serif'],
         'space-grotesk': ['Space Grotesk', 'sans-serif'],
         'be-vietnam-pro': ['Be Vietnam Pro', 'sans-serif'],
+        'sans': ['Satoshi', 'system-ui', 'sans-serif'], // Set Satoshi as default sans-serif
       },
       colors: {
         'brand-purple': '#9333EA',
